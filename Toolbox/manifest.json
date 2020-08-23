@@ -1,0 +1,43 @@
+{
+	"manifest_version": 2,
+	"name": "Toolbox",
+	"version": "1.0",
+	"description": "个人用快捷操作面板",
+	"author": "nnnoh",
+	"icons": {
+		"16": "img/hammer-and-wrench_120.png",
+		"48": "img/hammer-and-wrench_120.png",
+		"128": "img/hammer-and-wrench_120.png"
+	},
+	"browser_action": {
+		"default_icon": "img/hammer-and-wrench_19.png",
+		"default_title": "do what you want",
+		"default_popup": "popup.html"
+	},
+	"content_scripts": [
+		{
+			"matches": [
+				"http://*/*",
+				"https://*/*"
+			],
+			"js": [
+				"js/content-script.js"
+			],
+			"run_at": "document_start"
+		}
+	],
+	"background": {
+		"scripts": [
+			"js/background.js"
+		]
+	},
+	"options_page": "options.html",
+	"options_ui": {
+		"page": "options.html",
+		"chrome_style": true
+	},
+	"permissions": [
+		"contextMenus",
+		"tabs"
+	]
+}
