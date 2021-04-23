@@ -1,19 +1,23 @@
-// js引入
-document.write("<script src='./js/tool/markdownTools.js'></script>");
+import { copyUrlForMd } from './util/markdownUtil.js'
+import { MENU, sendMessageToContentScript} from './util/commonUtil.js'
 
-chrome.contextMenus.create({
-    title: "copy url with md style",
-    onclick: function () {
-        sendMessageToContentScript({ cmd: 'pageInfo' }, function (response) {
-            copyUrlForMd(response.title, response.url);
-        });
-    }
-});
-
-function sendMessageToContentScript(message, callback) {
-    chrome.tabs.query({ active: true, currentWindow: true }, function (tabs) {
-        chrome.tabs.sendMessage(tabs[0].id, message, function (response) {
-            if (callback) callback(response);
-        });
+/**
+ * 初始化
+ */
+async function init() {
+    // 右键菜单
+    chrome.contextMenus.create({
+        id: MENU.MENU_COPY_URL_MD.id,
+        title: MENU.MENU_COPY_URL_MD.title
     });
+
+    chrome.contextMenus.onClicked.addListener(async (event, tab) => {
+        if (event.menuItemId == MENU.MENU_COPY_URL_MD.id) {
+            sendMessageToContentScript({ cmd: 'pageInfo' }, function (response) {
+                copyUrlForMd(response.title, response.url);
+            });
+        }
+    })
 }
+
+init()

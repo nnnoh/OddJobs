@@ -6,3 +6,7 @@ body {
 body header, main {
     margin: 10px 10px 0px 10px;
 }
+
+.w120 {
+    width: 120px;
+}

@@ -12,7 +12,7 @@
 	"browser_action": {
 		"default_icon": "img/hammer-and-wrench_19.png",
 		"default_title": "do what you want",
-		"default_popup": "popup.html"
+		"default_popup": "html/popup.html"
 	},
 	"content_scripts": [
 		{
@@ -27,17 +27,25 @@
 		}
 	],
 	"background": {
-		"scripts": [
-			"js/background.js"
-		]
+		"page": "html/background.html",
+		"persistent": false
 	},
-	"options_page": "options.html",
+	"options_page": "html/options.html",
 	"options_ui": {
-		"page": "options.html",
+		"page": "html/options.html",
 		"chrome_style": true
 	},
 	"permissions": [
 		"contextMenus",
-		"tabs"
-	]
+		"tabs",
+		"bookmarks"
+	],
+	"commands": {
+		"copy-url-md": {
+			"suggested_key": {
+				"default": "Ctrl+Shift+X"
+			},
+			"description": "Copy Url with Md Style"
+		}
+	}
 }

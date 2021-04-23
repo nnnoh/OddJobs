@@ -3,8 +3,8 @@
  * @param title 标题
  * @param url 链接
  */
-var copyUrlForMd = function (title, url) {
-    let = urlStr = '[' + title + '](' + url + ')';
+let copyUrlForMd = function (title, url) {
+    let urlStr = '[' + title + '](' + url + ')';
     copyToClipboard(urlStr);
 }
 
@@ -36,4 +36,8 @@ let copyToClipboard = function (text) {
         alert('该浏览器不支持点击复制到剪贴板');
     }
     document.body.removeChild(textarea);
+}
+
+export {
+    copyUrlForMd
 }
