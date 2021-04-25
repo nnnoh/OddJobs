@@ -1,3 +1,8 @@
+let config = {
+    // 是否弹出提示框
+    isAlert: false
+}
+
 /**
  * 复制用于markdown的超链接
  * @param title 标题
@@ -30,8 +35,10 @@ let copyToClipboard = function (text) {
 
     try {
         var successful = document.execCommand('copy');
-        var msg = successful ? '成功复制到剪贴板' : '该浏览器不支持点击复制到剪贴板';
-        alert(msg);
+        if (config.isAlert){
+            var msg = successful ? '成功复制到剪贴板' : '该浏览器不支持点击复制到剪贴板';
+            alert(msg);
+        }
     } catch (err) {
         alert('该浏览器不支持点击复制到剪贴板');
     }

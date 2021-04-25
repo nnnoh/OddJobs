@@ -30,7 +30,6 @@
 		"page": "html/background.html",
 		"persistent": false
 	},
-	"options_page": "html/options.html",
 	"options_ui": {
 		"page": "html/options.html",
 		"chrome_style": true
