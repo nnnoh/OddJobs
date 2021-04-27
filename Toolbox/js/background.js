@@ -4,7 +4,7 @@ import { MENU, sendMessageToContentScript} from './util/commonUtil.js'
 /**
  * 初始化
  */
-async function init() {
+function init() {
     // 右键菜单
     chrome.contextMenus.create({
         id: MENU.MENU_COPY_URL_MD.id,
@@ -20,4 +20,6 @@ async function init() {
     })
 }
 
-init()
+chrome.runtime.onInstalled.addListener(function(){
+    init();
+})

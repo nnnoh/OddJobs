@@ -14,6 +14,7 @@
 		"default_title": "do what you want",
 		"default_popup": "html/popup.html"
 	},
+	"content_security_policy": "script-src 'self' 'unsafe-eval'; object-src 'self'",
 	"content_scripts": [
 		{
 			"matches": [

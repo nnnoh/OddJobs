@@ -1,6 +1,6 @@
 import { copyUrlForMd } from './util/markdownUtil.js'
 
-var background = chrome.extension.getBackgroundPage();
+// var background = chrome.extension.getBackgroundPage();
 
 function sendMessageToContentScript(message, callback) {
     chrome.tabs.query({ active: true, currentWindow: true }, function (tabs) {
@@ -11,9 +11,17 @@ function sendMessageToContentScript(message, callback) {
 }
 
 function init(){
+    layui.element.render()
+
     $('#copyUrlForMd').click(function () {
         sendMessageToContentScript({ cmd: 'pageInfo' }, function (response) {
             copyUrlForMd(response.title, response.url);
+        });
+    });
+
+    $('#bookmarksFunc').click(function () {
+        chrome.tabs.create({
+            url: '/html/bookmarks.html'
         });
     });
 
