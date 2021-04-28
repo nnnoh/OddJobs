@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <title>书签管理</title>
+    <script src="/lib/jquery-3.5.1.min.js"></script>
+    <script src="/lib/layui/layui.js"></script>
+    <link rel="stylesheet" type="text/css" href="/lib/layui/css/layui.css" />
+</head>
+
+<body>
+    <header>
+        <h1>书签管理</h1>
+    </header>
+    <main>
+        <!-- 输入框 -->
+        <div class="layui-form">
+            <div class="layui-form-item">
+                <label class="layui-form-label">Delay：</label>
+                <div class="layui-input-inline">
+                    <input type="text" id="delayMul" placeholder="请输入密码" autocomplete="off" class="layui-input">
+                </div>
+                <button id="testAvailable" type="button" class="layui-btn">Start Test</button>
+            </div>
+        </div>
+        <!-- 数据展示 -->
+        <hr>
+        <div id="loading" class="layui-progress layui-progress-big" lay-filter="loading" lay-showPercent="yes" style="display: none;">
+            <div class="layui-progress-bar layui-bg-green" lay-percent="0%"></div>
+          </div>
+        <div id="resultShow">
+            <div><label>availability rate：</label><label id='availRate'></label></div>
+            <table id="bookmarkList" lay-filter="bookmarkList"></table>
+        </div>
+    </main>
+    <script type="module" type="text/javascript" src="/js/bookmarks.js"></script>
+</body>
+
+</html>
