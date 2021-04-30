@@ -11,6 +11,12 @@ header h2{
     padding-left: 10px;
 }
 
-.w120 {
+.cus-label {
     width: 120px;
+    padding-left: 5px;
+    padding-right: 5px;
+}
+
+.mb5 {
+    margin-bottom: 5px;
 }

@@ -1,14 +1,7 @@
 import { copyUrlForMd } from './util/markdownUtil.js'
+import {sendMessageToContentScript} from './util/commonUtil.js'
 
 // var background = chrome.extension.getBackgroundPage();
-
-function sendMessageToContentScript(message, callback) {
-    chrome.tabs.query({ active: true, currentWindow: true }, function (tabs) {
-        chrome.tabs.sendMessage(tabs[0].id, message, function (response) {
-            if (callback) callback(response);
-        });
-    });
-}
 
 function init(){
     layui.element.render()
@@ -16,6 +9,13 @@ function init(){
     $('#copyUrlForMd').click(function () {
         sendMessageToContentScript({ cmd: 'pageInfo' }, function (response) {
             copyUrlForMd(response.title, response.url);
+            window.close();
+        });
+    });
+
+    $('#imgHide').click(function () {
+        sendMessageToContentScript({ cmd: 'imgHide' }, function (response) {
+            window.close();
         });
     });
 

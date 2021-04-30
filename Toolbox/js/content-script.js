@@ -1,9 +1,5 @@
 document.addEventListener('DOMContentLoaded', function () {
 	let url = window.location.href;
-	/**
-	 * 按键-方法 映射
-	 */
-	let clickFuncMap = new Map();
 
 	/**
 	 * 获取网页标题
@@ -61,18 +57,42 @@ document.addEventListener('DOMContentLoaded', function () {
 		}
 	}
 
+	/**
+	 * 图片显示/隐藏
+	 * @param {string} selector 
+	 */
+	function hideImg(selector) {
+		$img = $(selector).find('img')
+		$img.each((index, element) => {
+			let btn = document.createElement("button");
+			btn.setAttribute('id', 'btn' + index);
+			btn.setAttribute('class', 'green-button');
+			btn.innerText = '图片显示/隐藏'
+			btn.onclick = event => {
+				if (element.style.display == 'none') {
+					element.style.display = 'block';
+				} else {
+					element.style.display = 'none';
+				}
+			};
+			element.style.display = 'none';
+			// 有的parent是a标签，按钮放这里时，点击会触发页面跳转
+			element.parentElement.append(btn);
+		});
+	}
+
 	function init() {
 		// 默认开启
 		document.addEventListener('dblclick', elementDelete);
 
 		chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
 			let response = {};
+			response.status = '200'
 			switch (request.cmd) {
 				case 'pageInfo':
 					// 返回页面信息
 					response.title = getTitle();
 					response.url = url;
-					sendResponse(response);
 					break;
 				case 'elemDelSwitch':
 					if (request.enable) {
@@ -81,7 +101,15 @@ document.addEventListener('DOMContentLoaded', function () {
 						document.removeEventListener('dblclick', elementDelete);
 					}
 					break;
+				case 'imgHide':
+					// todo 手动输入
+					hideImg('article');
+					break;
+				default:
+					response.status = '404'
+					break;
 			}
+			sendResponse(response);
 		});
 	}
 

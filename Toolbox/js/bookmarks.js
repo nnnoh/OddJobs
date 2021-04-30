@@ -2,6 +2,7 @@ import { httpRequestUtil } from './util/httpUtil.js'
 import { sleep } from './util/commonUtil.js'
 
 let bmInfo = {
+    // [id:0, title:"" ,children[{title:""书签栏"",...}, {title:""其他书签""...}],...]
     bookmarkTreeArr: null,
     urlLen: null,
     isChange: false
@@ -69,7 +70,7 @@ function isHttpUrl(url) {
  */
 async function testAvailabe() {
     if (bmInfo.bookmarkTreeArr != null) {
-        const TEST_TOPIC = '';
+        const TEST_TOPIC = 'test-topic';
         // 测试结果数组
         let resultArr = [];
         // 请求发送数量
@@ -90,7 +91,7 @@ async function testAvailabe() {
             // 更新进度条
             layui.element.progress('loading', Math.round(finishNum / requestNum * 100) + '%');
 
-            let isFind = true
+            let isFind = false
             for (const record of resultArr) {
                 if (record.id == data.id) {
                     record.isAvailable = data.isAvailable;
@@ -124,8 +125,9 @@ async function testAvailabe() {
                     , cols: [[
                         { type: 'checkbox' }
                         , { type: 'numbers' }
-                        , { field: 'id', title: 'ID', width: 80, sort: true}
+                        , { field: 'id', title: 'ID', width: 80, sort: true }
                         , { field: 'title', title: '标题', sort: true }
+                        , { field: 'path', title: '路径', sort: true }
                         , { field: 'url', title: 'URL', sort: true }
                         , {
                             field: 'dateAdded', title: '收藏日期', sort: true, templet: record => {
@@ -146,16 +148,27 @@ async function testAvailabe() {
             }
         }
         httpRequestUtil.subscribe(TEST_TOPIC, handler);
+        // 目录栈
+        let pathStack = [];
 
-        let call = getDfsFunc(node => {
-            if (!isDir(node)) {
-                let id = node.id
+        let dfsCall = function (node) {
+            if (!node) {
+                return;
+            }
+            if (isDir(node)) {
+                for (const child of node.children) {
+                    pathStack.push(node.title);
+                    dfsCall(child);
+                    pathStack.pop();
+                }
+            } else {
+                let id = node.id;
                 requestNum++;
                 resultArr.push({
                     id: id,
                     index: node.index,
                     dateAdded: node.dateAdded,
-                    parentId: node.parentId,
+                    path: pathStack.join('/'),
                     title: node.title,
                     url: node.url,
                 });
@@ -169,35 +182,44 @@ async function testAvailabe() {
                     });
                     return;
                 }
-
-                // 延迟请求
+                // test
                 sleep(requestNum * delayMul).then(() => {
-                    httpRequestUtil.get({
-                        url: node.url
-                    }).done((data) => {
-                        httpRequestUtil.notify(TEST_TOPIC, {
-                            id: id,
-                            isAvailable: true,
-                            status: 'ok'
-                        });
-                    }).fail((xhr, status) => {
-                        httpRequestUtil.notify(TEST_TOPIC, {
-                            id: id,
-                            isAvailable: false,
-                            status: xhr.status + ': ' + xhr.statusText
-                        });
+                    httpRequestUtil.notify(TEST_TOPIC, {
+                        id: id,
+                        isAvailable: true,
+                        status: 'ok'
                     });
                 });
+
+                // 延迟请求
+                // sleep(requestNum * delayMul).then(() => {
+                //     httpRequestUtil.get({
+                //         url: node.url
+                //     }).done((data) => {
+                //         httpRequestUtil.notify(TEST_TOPIC, {
+                //             id: id,
+                //             isAvailable: true,
+                //             status: 'ok'
+                //         });
+                //     }).fail((xhr, status) => {
+                //         httpRequestUtil.notify(TEST_TOPIC, {
+                //             id: id,
+                //             isAvailable: false,
+                //             status: xhr.status + ': ' + xhr.statusText
+                //         });
+                //     });
+                // });
             }
-        });
+        };
 
         // 显示进度条
         layui.element.render();
         $("#resultShow").hide()
         $("#loading").show()
         for (const node of bmInfo.bookmarkTreeArr) {
-            call(node);
+            dfsCall(node);
         }
+        // 当请求完成过快，finishFlag来不及设置为true，导致无法正常执行结束
         finishFlag = true;
     } else {
         alert('未获取到书签信息，请稍后重试！');

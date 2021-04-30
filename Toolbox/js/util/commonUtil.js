@@ -26,12 +26,22 @@ function debounce(fn, delay) {
  * @param {*} message 消息
  * @param {*} callback 回调函数
  */
-function sendMessageToContentScript(message, callback) {
-    chrome.tabs.query({ active: true, currentWindow: true }, function (tabs) {
-        chrome.tabs.sendMessage(tabs[0].id, message, function (response) {
+function sendMessageToContentScript(message, callback, tab) {
+    if (tab && tab.id) {
+        chrome.tabs.sendMessage(tab.id, message, function (response) {
             if (callback) callback(response);
         });
-    });
+    } else {
+        chrome.tabs.query({ active: true, lastFocusedWindow: true }, function (tabs) {
+            if (tabs.length == 0 || tabs.length > 1) {
+                alert('标签页获取异常：' + JSON.stringify(tabs));
+                return
+            }
+            chrome.tabs.sendMessage(tabs[0].id, message, function (response) {
+                if (callback) callback(response);
+            });
+        });
+    }
 }
 
 /**
