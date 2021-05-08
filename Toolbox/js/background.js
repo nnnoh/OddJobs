@@ -21,11 +21,6 @@ chrome.runtime.onInstalled.addListener(function () {
         id: MENU.MENU_COPY_URL_MD.id,
         title: MENU.MENU_COPY_URL_MD.title
     });
-    initEvent();
 })
 
-chrome.runtime.onStartup.addListener(function () {
-    console.log('onStartup: ', new Date())
-    // 开启浏览器时添加右键菜单点击事件
-    initEvent();
-})
+initEvent();

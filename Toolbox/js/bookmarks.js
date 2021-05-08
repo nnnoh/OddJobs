@@ -182,33 +182,25 @@ async function testAvailabe() {
                     });
                     return;
                 }
-                // test
-                sleep(requestNum * delayMul).then(() => {
-                    httpRequestUtil.notify(TEST_TOPIC, {
-                        id: id,
-                        isAvailable: true,
-                        status: 'ok'
-                    });
-                });
 
                 // 延迟请求
-                // sleep(requestNum * delayMul).then(() => {
-                //     httpRequestUtil.get({
-                //         url: node.url
-                //     }).done((data) => {
-                //         httpRequestUtil.notify(TEST_TOPIC, {
-                //             id: id,
-                //             isAvailable: true,
-                //             status: 'ok'
-                //         });
-                //     }).fail((xhr, status) => {
-                //         httpRequestUtil.notify(TEST_TOPIC, {
-                //             id: id,
-                //             isAvailable: false,
-                //             status: xhr.status + ': ' + xhr.statusText
-                //         });
-                //     });
-                // });
+                sleep(requestNum * delayMul).then(() => {
+                    httpRequestUtil.get({
+                        url: node.url
+                    }).done((data) => {
+                        httpRequestUtil.notify(TEST_TOPIC, {
+                            id: id,
+                            isAvailable: true,
+                            status: 'ok'
+                        });
+                    }).fail((xhr, status) => {
+                        httpRequestUtil.notify(TEST_TOPIC, {
+                            id: id,
+                            isAvailable: false,
+                            status: xhr.status + ': ' + xhr.statusText
+                        });
+                    });
+                });
             }
         };
 
