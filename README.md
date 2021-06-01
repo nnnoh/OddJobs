@@ -13,10 +13,9 @@ Todo
 
 - 代码规范化(改用vue？)
 - 书签测试结构数据结构优化
-- 仅书签信息显示
+- 书签信息显示优化
 - 测试结果存储，当多次测试访问失败，提供一键删除
 - 指定书签同步（文件、Api）
-- 一键显示/隐藏
 
 ## 参考资料
 
@@ -33,6 +32,8 @@ Todo
 - [综述--扩展开发文档](http://open.chrome.360.cn/extension_dev/overview.html)
 
 - [浏览器扩展 - Mozilla 产品与私有技术 | MDN](https://developer.mozilla.org/zh-CN/docs/Mozilla/Add-ons/WebExtensions/API/bookmarks/getTree)
+
+- [Chrome 平台 API - Google Chrome 扩展程序开发文档（非官方中文版）](http://www.kkh86.com/it/chrome-extension-doc/extensions/api_index.html)
 
 ### 参考示例
 

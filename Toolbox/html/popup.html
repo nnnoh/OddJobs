@@ -21,7 +21,19 @@
 				<div class="layui-colla-content layui-show">
 					<div class="layui-form">
 						<div class="mb5">
-							<label class="layui-form-label cus-label">Dom 删除快捷键：</label>
+							<label class="layui-form-label cus-label w45">格式：</label>
+							<div class="layui-input-inline">
+								<input id="urlStyle" type="text" class="layui-input"
+									placeholder="e.g. [${title}](${url})" list="urlTrmplate">
+								<datalist id="urlTrmplate">
+									<option value="[${title}](${url})">
+									<option value="${title} ${url}">
+								</datalist>
+							</div>
+							<button id="copyUrl" type="button" class="layui-btn layui-btn-sm bl8">Copy Url</button>
+						</div>
+						<div class="mb5">
+							<label class="layui-form-label cus-label w120">Dom 删除快捷键：</label>
 							<div class="layui-input-block">
 								<input type="checkbox" name="elemDelSwitch" lay-skin="switch" lay-text="ON|OFF"
 									lay-filter="elemDelSwitch" checked>
@@ -39,13 +51,14 @@
 					<button id="bookmarksFunc" type="button" class="layui-btn layui-btn-sm">书签管理页</button>
 				</div>
 			</div>
-			<div class="layui-colla-item">
-				<h2 class="layui-colla-title">Markdown</h2>
+			<!-- <div class="layui-colla-item">
+				<h2 class="layui-colla-title">自动化脚本</h2>
 				<div class="layui-colla-content layui-show">
-					<button id="copyUrlForMd" type="button" class="layui-btn layui-btn-sm">Copy Url with Md
-						Style</button>
+					<div class="layui-form">
+						// todo
+					</div>
 				</div>
-			</div>
+			</div> -->
 		</div>
 		<script type="module" type="text/javascript" src="/js/popup.js"></script>
 	</main>

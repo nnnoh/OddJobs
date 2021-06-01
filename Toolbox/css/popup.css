@@ -12,11 +12,22 @@ header h2{
 }
 
 .cus-label {
-    width: 120px;
     padding-left: 5px;
     padding-right: 5px;
 }
 
+.w45 {
+    width: 45px;
+}
+
+.w120 {
+    width: 120px;
+}
+
 .mb5 {
     margin-bottom: 5px;
+}
+
+.ml8{
+    margin-left: 8px;
 }

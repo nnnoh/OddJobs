@@ -1,7 +1,7 @@
 let MENU = {
-    MENU_COPY_URL_MD: {
-        id: 'copy-url-md',
-        title: 'Copy Url with Md Style'
+    MENU_COPY_URL: {
+        id: 'copy-url',
+        title: 'Copy Url'
     }
 }
 

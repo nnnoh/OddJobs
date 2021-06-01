@@ -42,10 +42,11 @@
 	"permissions": [
 		"contextMenus",
 		"tabs",
-		"bookmarks"
+		"bookmarks",
+		"storage"
 	],
 	"commands": {
-		"copy-url-md": {
+		"copy-url": {
 			"suggested_key": {
 				"default": "Ctrl+Shift+X"
 			},

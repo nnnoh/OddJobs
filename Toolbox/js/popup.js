@@ -1,14 +1,31 @@
-import { copyUrlForMd } from './util/markdownUtil.js'
-import {sendMessageToContentScript} from './util/commonUtil.js'
+import { copyUrl } from './util/markdownUtil.js'
+import { sendMessageToContentScript } from './util/commonUtil.js'
 
 // var background = chrome.extension.getBackgroundPage();
 
-function init(){
-    layui.element.render()
+var urlStyle = 'no init'
 
-    $('#copyUrlForMd').click(function () {
+/**
+ * 初始化数据
+ */
+function initData() {
+    chrome.storage.local.get({urlStyle: 'no! this is error! run!'}, function(items) {
+        urlStyle = items.urlStyle
+        $('#urlStyle').val(urlStyle);
+    });
+}
+
+function init() {
+    initData();
+    layui.element.render();
+
+    $('#copyUrl').click(function () {
         sendMessageToContentScript({ cmd: 'pageInfo' }, function (response) {
-            copyUrlForMd(response.title, response.url);
+            if ($('#urlStyle').val().trim() != urlStyle){
+                urlStyle = $('#urlStyle').val().trim() 
+                chrome.storage.local.set({'urlStyle': urlStyle});
+            }
+            copyUrl(response, urlStyle);
             window.close();
         });
     });
@@ -28,8 +45,8 @@ function init(){
     setTimeout(function () {
         layui.form.render();
 
-        layui.form.on('switch(elemDelSwitch)', function(data){
-            sendMessageToContentScript({ 
+        layui.form.on('switch(elemDelSwitch)', function (data) {
+            sendMessageToContentScript({
                 cmd: 'elemDelSwitch',
                 enable: data.elem.checked
             });

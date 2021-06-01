@@ -5,12 +5,25 @@ let config = {
 
 /**
  * 复制用于markdown的超链接
- * @param title 标题
- * @param url 链接
+ * @param data 数据，{title:'', url: ''}
+ * @param style 格式
  */
-let copyUrlForMd = function (title, url) {
-    let urlStr = '[' + title + '](' + url + ')';
+let copyUrl = function (data, style) {
+    let urlStr = replaceByObj(data, style);
     copyToClipboard(urlStr);
+}
+
+/**
+ * 使用对象属性替换字符串中的 ${prop}
+ * @param {object} data 
+ * @param {string} str 
+ */
+let replaceByObj = function (data, str) {
+    // 转义 todo
+    for (const prop in data) {
+        str = str.replace('${' + prop + '}', data[prop]);
+    }
+    return str
 }
 
 /**
@@ -35,7 +48,7 @@ let copyToClipboard = function (text) {
 
     try {
         var successful = document.execCommand('copy');
-        if (config.isAlert){
+        if (config.isAlert) {
             var msg = successful ? '成功复制到剪贴板' : '该浏览器不支持点击复制到剪贴板';
             alert(msg);
         }
@@ -46,5 +59,5 @@ let copyToClipboard = function (text) {
 }
 
 export {
-    copyUrlForMd
+    copyUrl
 }
