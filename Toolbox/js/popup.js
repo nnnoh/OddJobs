@@ -9,21 +9,26 @@ var urlStyle = 'no init'
  * 初始化数据
  */
 function initData() {
-    chrome.storage.local.get({urlStyle: 'no! this is error! run!'}, function(items) {
+    chrome.storage.local.get({
+        urlStyle: 'no! this is error! run!',
+        elemDelSwitch: true
+    }, function (items) {
         urlStyle = items.urlStyle
         $('#urlStyle').val(urlStyle);
+        $('#elemDelSwitch').attr('checked', items.elemDelSwitch)
+        layui.form.render();
     });
 }
 
 function init() {
-    initData();
     layui.element.render();
+    initData();
 
     $('#copyUrl').click(function () {
         sendMessageToContentScript({ cmd: 'pageInfo' }, function (response) {
-            if ($('#urlStyle').val().trim() != urlStyle){
-                urlStyle = $('#urlStyle').val().trim() 
-                chrome.storage.local.set({'urlStyle': urlStyle});
+            if ($('#urlStyle').val().trim() != urlStyle) {
+                urlStyle = $('#urlStyle').val().trim()
+                chrome.storage.local.set({ 'urlStyle': urlStyle });
             }
             copyUrl(response, urlStyle);
             window.close();
@@ -43,9 +48,10 @@ function init() {
     });
 
     setTimeout(function () {
-        layui.form.render();
+        // layui.form.render();
 
         layui.form.on('switch(elemDelSwitch)', function (data) {
+            chrome.storage.local.set({ 'elemDelSwitch': data.elem.checked });
             sendMessageToContentScript({
                 cmd: 'elemDelSwitch',
                 enable: data.elem.checked

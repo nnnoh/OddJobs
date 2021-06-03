@@ -24,7 +24,10 @@ chrome.runtime.onInstalled.addListener(function () {
         title: MENU.MENU_COPY_URL.title
     });
     // 初始化数据
-    chrome.storage.local.set({'urlStyle': '[${title}](${url})'});
+    chrome.storage.local.set({
+        'urlStyle': '[${title}](${url})',
+        'elemDelSwitch': true
+    });
 })
 
 initEvent();
