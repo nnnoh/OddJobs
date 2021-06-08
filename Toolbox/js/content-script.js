@@ -82,8 +82,14 @@ document.addEventListener('DOMContentLoaded', function () {
 	}
 
 	function init() {
-		// 默认开启
-		document.addEventListener('dblclick', elementDelete);
+		chrome.storage.local.get({
+			elemDelSwitch: true
+		}, function (items) {
+			if (items.elemDelSwitch) {
+				document.addEventListener('dblclick', elementDelete);
+			}
+		});
+
 
 		chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
 			let response = {};
