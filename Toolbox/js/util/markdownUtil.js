@@ -8,9 +8,12 @@ let config = {
  * @param data 数据，{title:'', url: ''}
  * @param style 格式
  */
-let copyUrl = function (data, style) {
+let copyUrl = function (data, style, isCopy) {
     let urlStr = replaceByObj(data, style);
-    copyToClipboard(urlStr);
+    if (isCopy) {
+        copyToClipboard(urlStr);
+    }
+    return urlStr;
 }
 
 /**
@@ -59,5 +62,6 @@ let copyToClipboard = function (text) {
 }
 
 export {
-    copyUrl
+    copyUrl,
+    copyToClipboard
 }

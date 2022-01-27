@@ -5,7 +5,7 @@ import { MENU, sendMessageToContentScript} from './util/commonUtil.js'
 chrome.commands.onCommand.addListener(async command => {
     if (command == MENU.MENU_COPY_URL_MD.id) {
         sendMessageToContentScript({ cmd: 'pageInfo' }, function (response) {
-            copyUrl(response.title, response.url);
+            copyUrl(response.title, response.url, true);
         });
     }
 })

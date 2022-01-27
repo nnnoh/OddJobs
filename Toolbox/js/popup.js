@@ -1,4 +1,4 @@
-import { copyUrl } from './util/markdownUtil.js'
+import { copyUrl, copyToClipboard } from './util/markdownUtil.js'
 import { sendMessageToContentScript } from './util/commonUtil.js'
 
 // var background = chrome.extension.getBackgroundPage();
@@ -30,8 +30,42 @@ function init() {
                 urlStyle = $('#urlStyle').val().trim()
                 chrome.storage.local.set({ 'urlStyle': urlStyle });
             }
-            copyUrl(response, urlStyle);
+            copyUrl(response, urlStyle, true);
             window.close();
+        });
+    });
+
+    $('#copyAllUrl').click(function () {
+        // 更新 urlStyle
+        if ($('#urlStyle').val().trim() != urlStyle) {
+            urlStyle = $('#urlStyle').val().trim()
+            chrome.storage.local.set({ 'urlStyle': urlStyle });
+        }
+
+        let message = { cmd: 'pageInfo' };
+        // 对所有 tab
+        chrome.tabs.query({}, function (tabs) {
+            if (tabs.length == 0) {
+                alert('无打开的标签页');
+                return
+            }
+            let tabsLen = tabs.length;
+            let count = 0;
+            let resultArr = new Array(tabsLen);
+            let callback = function(response, i) {
+                resultArr[i] = copyUrl(response, urlStyle);
+                count++;
+                if (count == tabsLen) {
+                    // 完成
+                    copyToClipboard(resultArr.join('\n'));
+                    window.close();
+                }
+            }
+            for (let i = 0; i < tabs.length; i++) {
+                chrome.tabs.sendMessage(tabs[i].id, message, function (response) {
+                    callback(response, i);
+                });
+            }
         });
     });
 

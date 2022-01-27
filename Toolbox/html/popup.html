@@ -22,7 +22,7 @@
 					<div class="layui-form">
 						<div class="mb5">
 							<label class="layui-form-label cus-label w45">格式：</label>
-							<div class="layui-input-inline">
+							<div class="layui-input-block">
 								<input id="urlStyle" type="text" class="layui-input"
 									placeholder="e.g. [${title}](${url})" list="urlTrmplate">
 								<datalist id="urlTrmplate">
@@ -30,7 +30,10 @@
 									<option value="${title} ${url}">
 								</datalist>
 							</div>
-							<button id="copyUrl" type="button" class="layui-btn layui-btn-sm bl8">Copy Url</button>
+							<div class="layui-input-block">
+								<button id="copyUrl" type="button" class="layui-btn layui-btn-sm bl8">Copy Url</button>
+								<button id="copyAllUrl" type="button" class="layui-btn layui-btn-sm bl8">Copy All Url</button>
+							</div>
 						</div>
 						<div class="mb5">
 							<label class="layui-form-label cus-label w120">Dom 删除快捷键：</label>

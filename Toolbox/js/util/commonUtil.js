@@ -22,7 +22,7 @@ function debounce(fn, delay) {
 };
 
 /**
- * 与 conten-script 交互
+ * 与一个（当前页或指定页） conten-script 交互
  * @param {*} message 消息
  * @param {*} callback 回调函数
  */

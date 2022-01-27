@@ -9,7 +9,7 @@ function initEvent() {
         if (event.menuItemId == MENU.MENU_COPY_URL.id) {
             sendMessageToContentScript({ cmd: 'pageInfo' }, function (response) {
                 chrome.storage.local.get({urlStyle: 'no! this is error! run!'}, function(items) {
-                    copyUrl(response, items.urlStyle);
+                    copyUrl(response, items.urlStyle, true);
                 });
             }, tab);
         }
