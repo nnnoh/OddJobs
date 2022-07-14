@@ -22,8 +22,8 @@
 				"https://*/*"
 			],
 			"js": [
-				"lib/jquery-3.5.1.min.js",
-				"js/content-script.js"
+				"js/content-script.js",
+				"lib/jquery-3.5.1.min.js"
 			],
 			"css": [
 				"css/content-script.css"

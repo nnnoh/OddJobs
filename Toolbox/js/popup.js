@@ -74,6 +74,12 @@ function init() {
             window.close();
         });
     });
+    
+    $('#showToolbar').click(function () {
+        sendMessageToContentScript({ cmd: 'showToolbar' }, function (response) {
+            window.close();
+        });
+    });
 
     $('#bookmarksFunc').click(function () {
         chrome.tabs.create({

@@ -14,3 +14,43 @@
     cursor: pointer;
     /* margin: 0 10px; */
 }
+
+.toolbox.toolbar {
+    top: calc(50% - 100px);
+    left: 10px;
+    position: fixed;
+    z-index: 99999;
+    display: flex;
+    width: 50px;
+    flex-wrap: wrap;
+    border-radius: 20px;
+    background-color: rgb(243, 243, 243);
+}
+
+#toolbar123 .toolbar-btn {
+    display: flex;
+    height: 40px;
+    width: 40px;
+    align-items: center;
+    justify-content: center;
+    background-color: #ffffff;
+    border-radius: 20px;
+    margin: 5px;
+    font-size: 14px;
+    cursor: pointer;
+    /* 禁止选中文本*/
+    -moz-user-select: none;
+    -webkit-user-select: none;
+    -ms-user-select: none;
+    -khtml-user-select: none;
+    user-select: none;
+}
+
+#toolbar123 .toolbar-btn:hover {
+    background-color: #d7d7d7;
+}
+
+/* 前两个按钮样式 */
+#toolbar123 .toolbar-btn:nth-child(-n+2) {
+    font-size: 20px;
+}

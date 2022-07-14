@@ -1,7 +1,13 @@
 let MENU = {
     MENU_COPY_URL: {
         id: 'copy-url',
-        title: 'Copy Url'
+        title: 'Copy Url',
+        cmd: 'pageInfo'
+    },
+    MENU_SHOW_TOOLBAR: {
+        id: 'show-toolbar',
+        title: 'Show Toolbar',
+        cmd: 'showToolbar'
     }
 }
 
@@ -27,6 +33,7 @@ function debounce(fn, delay) {
  * @param {*} callback 回调函数
  */
 function sendMessageToContentScript(message, callback, tab) {
+    // [javascript - How to handle "Unchecked runtime.lastError: The message port closed before a response was received"? - Stack Overflow](https://stackoverflow.com/questions/59914490/how-to-handle-unchecked-runtime-lasterror-the-message-port-closed-before-a-res)
     if (tab && tab.id) {
         chrome.tabs.sendMessage(tab.id, message, function (response) {
             if (callback) callback(response);
@@ -60,7 +67,7 @@ function sleep(time) {
  */
 Date.prototype.format = function (fmt) {
     var o = {
-        "M+": this.getMonth() + 1,                 //月份
+        "M+": this.getMonth() + 1,               //月份
         "d+": this.getDate(),                    //日
         "h+": this.getHours(),                   //小时
         "m+": this.getMinutes(),                 //分
