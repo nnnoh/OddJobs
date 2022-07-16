@@ -125,27 +125,17 @@ document.addEventListener('DOMContentLoaded', function () {
 
 		let lastValue;
 		const scrollCall = () => {
-			setTimeout(() => {
-				if (!isRunning) {
-					// 停止当前正在运行的动画。stopAll 参数停止被选元素的所有加入队列的动画。
-					$div.stop(true);
-					return;
-				}
-				$div.animate(
-					{ scrollTop: $div.scrollTop() + speed },
-					{
-						duration: 500, easing: "linear",
-						done: () => {
-							// animate 不能移动了就停止（到边界 或 速度为 0）
-							if (lastValue === $div.scrollTop()) {
-								isRunning = false;
-							}
-						}
-					}
-				);
-				lastValue = $div.scrollTop();
-				scrollCall();
-			}, 500);
+			if (!isRunning) {
+				// 停止当前正在运行的动画。stopAll 参数停止被选元素的所有加入队列的动画。
+				$div.stop(true);
+				return;
+			}
+			$div.animate(
+				{ scrollTop: $div.scrollTop() + speed },
+				{ duration: 500, easing: "linear" }
+			);
+			lastValue = $div.scrollTop();
+			setTimeout(() => { scrollCall(); }, 500);
 		}
 		$('#startScroll').on('click', () => {
 			if (isRunning) {
@@ -165,6 +155,10 @@ document.addEventListener('DOMContentLoaded', function () {
 			if (isRunning && Math.abs(lastValue - $div.scrollTop()) > Math.abs(speed)) {
 				// 人为滚动时暂定滚动动画
 				$div.stop(true);
+			}
+			// 到达边界时停止
+			if ($div.scrollTop() === 0 || $div.prop('scrollHeight') -$div.scrollTop() -$div.prop('clientHeight') < 1) {
+				isRunning = false;
 			}
 		});
 	}
