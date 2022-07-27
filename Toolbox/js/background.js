@@ -18,6 +18,10 @@ function initEvent() {
             sendMessageToContentScript({ cmd: MENU.MENU_SHOW_TOOLBAR.cmd }, null, tab);
             return;
         }
+        if (event.menuItemId == MENU.MENU_SHOW_DIR.id) {
+            sendMessageToContentScript({ cmd: MENU.MENU_SHOW_DIR.cmd }, null, tab);
+            return;
+        }
     })
 }
 

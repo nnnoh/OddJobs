@@ -104,8 +104,6 @@ document.addEventListener('DOMContentLoaded', function () {
 		initDragEvent('#toolbar123');
 
 		initScrollBtnEvent('html');
-		//显示目录
-		// showDir('body');
 	}
 
 	/**
@@ -157,7 +155,7 @@ document.addEventListener('DOMContentLoaded', function () {
 				$div.stop(true);
 			}
 			// 到达边界时停止
-			if ($div.scrollTop() === 0 || $div.prop('scrollHeight') -$div.scrollTop() -$div.prop('clientHeight') < 1) {
+			if ($div.scrollTop() === 0 || $div.prop('scrollHeight') - $div.scrollTop() - $div.prop('clientHeight') < 1) {
 				isRunning = false;
 			}
 		});
@@ -184,6 +182,8 @@ document.addEventListener('DOMContentLoaded', function () {
 					top: e.clientY - y + top + 'px',
 					left: e.clientX - x + left + 'px'
 				});
+				// 阻止默认事件
+				e.preventDefault();
 			});
 		});
 		$body.on('mouseup', (e) => {
@@ -196,65 +196,130 @@ document.addEventListener('DOMContentLoaded', function () {
 	 * 目录显示
 	 * @param {string} selector 文章dom元素选择器
 	 */
-	function showDir(selector) {
-		const treeId = 'dir' + Math.floor((Math.random() * 100) + 1);
+	function showDir(selector = 'body') {
+		// const treeId = 'articleDir123';
+		$('#articleDir123').remove(); // 删除已存在的目录
 		const dirTree = new ArticleDirectory(['h1', 'h2', 'h3', 'h4', 'h5', 'h6']).getDirTree(selector)
-		if (dirTree === null) {
+		if (!dirTree || dirTree.length === 0) {
 			alert(`${selector} 未查找到标题`);
 			return;
 		}
 
 		// 弹出目录
-		// TODO layui 引入存在问题
-		// , {
-		// 	"matches": [
-		// 		"http://*/*",
-		// 		"https://*/*"
-		// 	],
-		// 	"js": [
-		// 		"lib/layui/layui.js"
-		// 	],
-		// 	"css": [
-		// 		"lib/layui/css/layui.css",
-		// 		"lib/layui/css/modules/layer/default/layer.css"
-		// 	],
-		// 	"run_at": "document_idle"
-		// }
-		// "notifications"
-		layui.layer.open({
-			type: 1
-			, content: `<div id="${treeId}"></div>`
-			, skin: 'layui-layer-dir'
-			, area: 'auto'
-			// , maxHeight: 300
-			, title: '目录'
-			, closeBtn: true
-			, offset: 'l' // 左边缘
-			, shade: false
-			, success: function (layero, index) {
-				layui.tree.render({
-					elem: '#' + treeId
-					, data: dirTree
-					, showLine: false  //是否开启连接线
-					, click: function (obj) {
-						scrollTop(obj.data.elem);
-					}
-				});
+		// 注，layui 引入存在问题
 
-				// 设置显示位置
-				// layui.layer.style(index, {
-				// 	marginLeft: 15
-				// });
+		// 样式参考 gitee
+		const dirHtml = renderDirTree(dirTree);
+
+		$(document.body).append(`<div id="articleDir123" class="toolbox dir-tree-div">
+			<div class="display-handle">||</div>
+			<div class="dir-tree">
+				<div class="resizable-handle"></div>
+				<div class="tree-header"><span>目录</span></div>
+				${dirHtml}</div></div>`);
+
+		// 默认显示
+		let isDisplay = true;
+		$('#articleDir123 .display-handle').on('click', (event) => {
+			if (isDisplay) {
+				$('#articleDir123.toolbox').addClass('toolbox-hide');
+			} else {
+				$('#articleDir123.toolbox').removeClass('toolbox-hide');
+			}
+			isDisplay = !isDisplay;
+		});
+
+		// 标题点击事件 todo a
+		$('#articleDir123 .tree-node').on('click', (event) => {
+			scrollTop($(`[title-bind='${$(event.target).attr('target')}']`));
+		});
+
+		// 下级目录是否显示
+		$('#articleDir123 .tree-icon-arrow').on('click', (event) => {
+			const $elem = $(event.target); // $elem 是 i 元素
+			const $span = $elem.parent();
+			const $children = $elem.parent().parent().find('ul');
+			$children.toggle();
+			$span.removeClass('tree-unfold');
+			if ($children.css('display') !== 'none') { // 树展开图标样式
+				$span.addClass('tree-unfold');
 			}
 		});
+
+		// 宽度可变
+		bindResize();
+
+		// （可选）将原页面内容往右边撑（设置 html 以及 body 中 position: fixed; 元素的 margin-left 属性）
+	}
+
+	/**
+	 * 目录树宽度拖动事件
+	 */
+	function bindResize() {
+		// [使用 JS 实现拖拽拉伸一个 div 的宽度 - RockyMountain - 博客园](https://www.cnblogs.com/wentommy/p/15955101.html)
+		// [setCapture函数的运用 - 水流目 - 博客园](https://www.cnblogs.com/Bideam/p/6798443.html)
+		// setCapture 只有ie浏览器支持。
+
+		const $opElem = $('#articleDir123 .resizable-handle');
+		const $resizeElem = $('#articleDir123');
+		let x = 0;
+
+		$opElem.on('mousedown', function (event) {
+			// 点击位置与元素边框的偏移值
+			// x = el.offsetWidth - evt.offsetX
+
+			$(document).bind("mousemove", mouseMove).bind("mouseup", mouseUp);
+
+			// 阻止默认事件
+			event.preventDefault();
+		})
+
+		// 鼠标移动事件
+		function mouseMove(event) {
+			$resizeElem.width(event.clientX + x + 'px');
+
+			// 如果鼠标移出元素或屏幕外
+			if (event.clientX <= 0 || event.clientX >= document.body.clientWidth + 2) {
+				mouseUp()
+			}
+		}
+
+		// 释放焦点，移除事件
+		function mouseUp() {
+			($(document).unbind("mousemove", mouseMove).unbind("mouseup", mouseUp))
+		}
+	}
+
+	/**
+	 * 获取目录 html
+	 * @param {*} dirTree 目录对象
+	 * @returns 目录 html
+	 */
+	function renderDirTree(dirTree) {
+		if (!dirTree || dirTree.length === 0) {
+			return '';
+		}
+		let dirHtml = '';
+		for (let item of dirTree) {
+			let title = item.title ? item.title : '<空>';
+			let childHtml = renderDirTree(item.children);
+			let treeIcon = childHtml.length > 0 ? 'tree-icon-arrow tree-unfold' : '';
+			dirHtml += `<li><span class="${treeIcon}"><i></i></span>
+				<span class="tree-node" title="${title}" target='${item.titleBind}'>${title}</span>${childHtml}</li>`;
+		}
+		return `<ul>${dirHtml}</ul>`;
 	}
 
 	/**
 	 * dom 元素滚动到顶端
-	 * @param {*} elem dom 元素
+	 * @param {*} $elem dom 元素
 	 */
-	function scrollTop(elem) {
-		// todo
+	function scrollTop($elem) {
+		// todo 存在偏差
+		$('html').animate(
+			{ scrollTop: $elem.prop('offsetTop') },
+			{ duration: 'slow', easing: "swing" }
+		);
 	}
 
 	class ArticleDirectory {
@@ -265,7 +330,7 @@ document.addEventListener('DOMContentLoaded', function () {
 		// 遍历html获取目录树
 		getDirTree(selector) {
 			const $titleArr = $(selector).find(this.config.join(','));
-			let root = null;
+			let rootArr = [];
 			const stack = [];
 			// [start, end) 层级的空目录入栈
 			const pushNullObj = (start, end) => {
@@ -274,12 +339,17 @@ document.addEventListener('DOMContentLoaded', function () {
 						hierarchy: i,
 						elem: null,
 						title: '',
+						titleBind: '',
 						children: []
 					};
 					if (stack.length > 0) {
 						stack[stack.length - 1].children.push(tmpObj);
 					}
 					stack.push(tmpObj);
+
+					if (stack.length === 1) { // 根节点
+						rootArr.push(stack[0]);
+					}
 				}
 			}
 
@@ -287,29 +357,28 @@ document.addEventListener('DOMContentLoaded', function () {
 				let itemObj = {
 					hierarchy: this.getHierarchy(item),
 					elem: item,
-					title: $(item).text(),
+					title: $(item).prop('innerText'),
+					titleBind: String(Math.floor((Math.random() * 1000) + 1)), // 用于选中标题
 					children: []
 				};
+				$(item).attr('title-bind', itemObj.titleBind);
 
 				// 弹出栈同级及以下目录
-				for (let i = stack.length - 1; i >= 0; i++) {
-					let lastObj = stack[stack.length - 1];
-					if (lastObj.hierarchy < itemObj.hierarchy) {
-						break;
-					}
+				for (let i = stack.length - 1; i >= itemObj.hierarchy; i--) {
 					stack.splice(i, 1);
 				}
+
 				pushNullObj(stack.length, itemObj.hierarchy);
 				if (stack.length > 0) {
 					stack[stack.length - 1].children.push(itemObj);
 				}
 				stack.push(itemObj);
 
-				if (root === null) {
-					root = stack[0];
+				if (stack.length === 1) { // 根节点
+					rootArr.push(stack[0]);
 				}
 			}
-			return root;
+			return rootArr;
 		}
 
 		// 获取 目录 层级
@@ -357,6 +426,10 @@ document.addEventListener('DOMContentLoaded', function () {
 				case 'showToolbar':
 					// 显示工具条
 					showToolbar();
+					break;
+				case 'showDir':
+					// 显示目录
+					showDir();
 					break;
 				default:
 					response.status = '404'

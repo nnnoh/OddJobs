@@ -8,6 +8,11 @@ let MENU = {
         id: 'show-toolbar',
         title: 'Show Toolbar',
         cmd: 'showToolbar'
+    },
+    MENU_SHOW_DIR: {
+        id: 'show-dir',
+        title: 'Show Dir',
+        cmd: 'showDir'
     }
 }
 
